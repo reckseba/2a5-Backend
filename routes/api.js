@@ -29,7 +29,7 @@ router.get('/urlLong/:urlShort', (req, res, next) => {
             if(count == 1){
                 // match
                 Url.findOne({"urlShort": req.params.urlShort})
-                    .then(data => res.json(301, data.urlLong))
+                    .then(data => res.redirect(301, data.urlLong))
                     .catch(next);
             } else {
                 // zero or more entries for that
