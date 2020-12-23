@@ -17,7 +17,7 @@ router.get('/url', (req, res, next) => {
 
 });
 
-router.get('/urlLong/:urlShort', (req, res, next) => {
+router.get('/:urlShort', (req, res, next) => {
 
         // /api/urlLong/[urlShort]
         // if urlShort is not given, it would take the /url route line 6
@@ -45,7 +45,7 @@ router.get('/urlLong/:urlShort', (req, res, next) => {
 router.get('/urlQrCode/:urlShort', (req, res, next) => {
 
         // /api/urlQrCode/[urlShort]
-        // if urlShort is not given, it would take the /url route line 6
+        // returns the qr code
 
         // at first let's check if there is such url
         Url.countDocuments({urlShort: req.params.urlShort}, function (err, count) {
@@ -68,7 +68,7 @@ router.get('/urlQrCode/:urlShort', (req, res, next) => {
 });
 
 // shorten a new url
-router.post('/url', (req, res, next) => {
+router.post('/newUrlLong', (req, res, next) => {
 
     if(req.body.urlLong){
 

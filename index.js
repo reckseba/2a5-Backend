@@ -7,7 +7,7 @@ require('dotenv').config({path: 'process.env'});
 
 const app = express();
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORTBACKEND;
 
 //connect to the database
 mongoose.connect(process.env.DB, { useNewUrlParser: true, useUnifiedTopology: true , useCreateIndex: true})
@@ -25,7 +25,7 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
-app.use('/api', routes);
+app.use('/', routes);
 
 app.use((err, req, res, next) => {
   console.log(err);
