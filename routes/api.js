@@ -1,4 +1,5 @@
 const express = require ('express');
+const validUrl = require('valid-url');
 const router = express.Router();
 const Url = require('../models/url');
 
@@ -70,32 +71,39 @@ router.get('/urlQrCode/:urlShort', (req, res, next) => {
 // shorten a new url
 router.post('/newUrlLong', (req, res, next) => {
 
-    if(req.body.urlLong){
+    if(req.body.urlLong && req.body.urlLong.length > 0){
 
         // here some url validate check
+        if (validUrl.isUri(req.body.urlLong)){
+        
+            // lookup if already there
+            Url.countDocuments({urlLong: req.body.urlLong}, function (err, count) {
 
-        // lookup if already there
-        Url.countDocuments({urlLong: req.body.urlLong}, function (err, count) {
+                if(count > 0){
+                    // match
+                    // return the exisiting one
+                    Url.findOne({"urlLong": req.body.urlLong})
+                        .then(data => res.json(data))
+                        .catch(next);
 
-            if(count > 0){
-                // match
-                // res.json({
-                //    error: "This url already exists."
-                //});
+                } else {
+                    // zero or more entries for that
+                    // but more cant be because those are unique according to schema
 
-                // return the exisiting one
-                Url.findOne({"urlLong": req.body.urlLong})
-                    .then(data => res.json(data))
-                    .catch(next);
 
-            } else {
-                // zero or more entries for that
-                // but more cant be because those are unique according to schema
-                Url.create(req.body)
-                    .then(data => res.json(data))
-                    .catch(next)
-            }
-        });
+
+
+                    Url.create(req.body)
+                        .then(data => res.json(data))
+                        .catch(next)
+                }
+            });
+
+        } else {
+            res.json({
+                error: "This is no URL."
+            });
+        }
 
     } else {
         // if it's empty
