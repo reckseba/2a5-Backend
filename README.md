@@ -1,15 +1,27 @@
 # 2a5
 url shortner
 
-## Setup
+## Setup local
 
 create process.env file in main directory and put:
 
+ENVIRONMENT=test  
 DB=mongodb+srv://....  
-PROTOCOL=https  
+PROTOCOL=http  
 HOSTNAME=localhost  
 PORTBACKEND=5000  
 PORTFRONTEND=3000  
+
+## Setup prod
+
+put to process.env:
+
+ENVIRONMENT=prod  
+DB=mongodb+srv://....  
+PROTOCOL=https  
+HOSTNAME=example.com  
+PORTBACKEND=5000  
+PORTFRONTEND=443  
 
 ## Local Test Run
 > `node index.js`
