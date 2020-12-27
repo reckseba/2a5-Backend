@@ -1,5 +1,5 @@
 const express = require ('express');
-const validUrl = require('valid-url');
+const psl = require('psl');
 const router = express.Router();
 const Url = require('../models/url');
 
@@ -74,7 +74,7 @@ router.post('/newUrlLong', (req, res, next) => {
     if(req.body.urlLong && req.body.urlLong.length > 0){
 
         // here some url validate check
-        if (validUrl.isUri(req.body.urlLong)){
+        if (psl.isValid(req.body.urlLong)) {
         
             // lookup if already there
             Url.countDocuments({urlLong: req.body.urlLong}, function (err, count) {
