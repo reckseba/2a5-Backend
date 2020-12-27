@@ -24,7 +24,11 @@ PORTBACKEND=5000
 PORTFRONTEND=443  
 
 ## Local Test Run
-> `node index.js`
+> node server.js
+
+## Prod Run
+npm install forever -g
+forever start server.js
 
 ## SSL
 
