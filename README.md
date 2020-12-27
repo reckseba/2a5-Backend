@@ -12,7 +12,7 @@ PORTBACKEND=5000
 PORTFRONTEND=3000  
 
 ## Local Test Run
->> `node index.js`
+> `node index.js`
 
 ## SSL
 
