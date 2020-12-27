@@ -75,40 +75,49 @@ router.post('/newUrlLong', (req, res, next) => {
     if(req.body.urlLong && req.body.urlLong.length > 0){
         
         // to extract the hostname
-        const { hostname } = new URL(req.body.urlLong);
 
-        // here some url validate check
-        if (psl.isValid(hostname)) {
+        // if this is no valid url it will throw exception
+        try {
+            const { hostname } = new URL(req.body.urlLong);
+
+            // now check if its a valid top level domain
+            if (psl.isValid(hostname)) {
+                
+                // prevent recursive behaviour
+                if(hostname != "2a5.de") {
             
-            if(hostname != "2a5.de") {
-        
-                // lookup if already there
-                Url.countDocuments({urlLong: req.body.urlLong}, function (err, count) {
+                    // lookup if already there
+                    Url.countDocuments({urlLong: req.body.urlLong}, function (err, count) {
 
-                    if(count > 0){
-                        // match
-                        // return the exisiting one
-                        Url.findOne({"urlLong": req.body.urlLong})
-                            .then(data => res.json(data))
-                            .catch(next);
+                        if(count > 0){
+                            // match
+                            // return the exisiting one
+                            Url.findOne({"urlLong": req.body.urlLong})
+                                .then(data => res.json(data))
+                                .catch(next);
 
-                    } else {
-                        // zero or more entries for that
-                        // but more cant be because those are unique according to schema
+                        } else {
+                            // zero or more entries for that
+                            // but more cant be because those are unique according to schema
 
-                        Url.create(req.body)
-                            .then(data => res.json(data))
-                            .catch(next)
-                    }
-                });
+                            Url.create(req.body)
+                                .then(data => res.json(data))
+                                .catch(next)
+                        }
+                    });
+
+                } else {
+                    res.json({
+                        error: "2a5 as input is not allowed."
+                    });
+                }
 
             } else {
                 res.json({
-                    error: "2a5 as input is not allowed."
+                    error: "This is no valid URL."
                 });
             }
-
-        } else {
+        } catch (error) {
             res.json({
                 error: "This is no URL."
             });
