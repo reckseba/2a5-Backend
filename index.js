@@ -10,19 +10,7 @@ require('dotenv').config({path: 'process.env'});
 
 const app = express();
 
-const hostname = process.env.HOSTNAME
-
-// Certificate
-const privateKey = fs.readFileSync(`ssl/privkey.pem`, 'utf8');
-const certificate = fs.readFileSync(`ssl/cert.pem`, 'utf8');
-const ca = fs.readFileSync(`ssl/chain.pem`, 'utf8');
-
-const credentials = {
-	key: privateKey,
-	cert: certificate,
-	ca: ca
-};
-
+const env = process.env.ENVIRONMENT;
 const portbackend = process.env.PORTBACKEND;
 
 //connect to the database
@@ -48,11 +36,33 @@ app.use((err, req, res, next) => {
   next();
 });
 
+if(env == "prod") {
 
-const httpsServer = https.createServer(credentials, app);
+  // Certificate
+  const privateKey = fs.readFileSync(`ssl/privkey.pem`, 'utf8');
+  const certificate = fs.readFileSync(`ssl/cert.pem`, 'utf8');
+  const ca = fs.readFileSync(`ssl/chain.pem`, 'utf8');
 
-httpsServer.listen(portbackend, () => {
-	console.log(`HTTPS Server running on port ${portbackend}`);
-});
+  const credentials = {
+    key: privateKey,
+    cert: certificate,
+    ca: ca
+  };
 
+  const httpsServer = https.createServer(credentials, app);
 
+  httpsServer.listen(portbackend, () => {
+    console.log(`HTTPS Prod-Server running on port ${portbackend}`);
+  });
+
+} else if(env == "test") {
+
+  const httpServer = http.createServer(app);
+
+  httpServer.listen(portbackend, () => {
+    console.log(`HTTP Test-Server running on port ${portbackend}`);
+  });
+
+} else {
+  console.log("Please define an environment in process.env!");
+}
