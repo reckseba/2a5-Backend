@@ -3,7 +3,7 @@ const qrcode = require('qrcode');
 const Schema = mongoose.Schema;
 require('dotenv').config({path: 'process.env'});
 
-function randomIntFromInterval(min, max) { // min and max included 
+function randomIntFromInterval(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
@@ -22,7 +22,7 @@ function makeUrlShort(lengthMin, lengthMax, callbackFunction) {
 
 function makeQrCode(urlShort, callbackFunction) {
 
-  qrcode.toDataURL(process.env.PROTOCOL + '://' + process.env.HOST + ':' + process.env.PORTFRONTEND + '/' + urlShort, function (err, urlQrCode) {
+  qrcode.toDataURL(process.env.PROTOCOL + '://' + process.env.HOSTNAME + '/' + urlShort, function (err, urlQrCode) {
     callbackFunction(urlQrCode);
   });
   
@@ -63,7 +63,7 @@ UrlSchema.pre('save', function(next) {
   makeUrlShort(3, 5, function(urlShort) {
     // Assigning the id property and calling next() to continue
     self.urlShort = urlShort;
-    self.urlShortFull = process.env.PROTOCOL + '://' + process.env.HOST + ':' + process.env.PORTFRONTEND + '/' + urlShort;
+    self.urlShortFull = process.env.PROTOCOL + '://' + process.env.HOSTNAME + '/' + urlShort;
 
     makeQrCode(self.urlShort, function (urlQrCode) {
       self.urlQrCode = urlQrCode;
