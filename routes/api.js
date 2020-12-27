@@ -71,14 +71,16 @@ router.get('/urlQrCode/:urlShort', (req, res, next) => {
 // shorten a new url
 router.post('/newUrlLong', (req, res, next) => {
 
+    // check if there is any input
     if(req.body.urlLong && req.body.urlLong.length > 0){
+        
+        // to extract the hostname
+        const { hostname } = new URL(req.body.urlLong);
 
         // here some url validate check
-        if (psl.isValid(req.body.urlLong)) {
-
-            const parsed = psl.parse(req.body.urlLong);
+        if (psl.isValid(hostname)) {
             
-            if(parsed.tld != "de" && parsed.sld != "2a5") {
+            if(hostname != "2a5.de") {
         
                 // lookup if already there
                 Url.countDocuments({urlLong: req.body.urlLong}, function (err, count) {
@@ -93,9 +95,6 @@ router.post('/newUrlLong', (req, res, next) => {
                     } else {
                         // zero or more entries for that
                         // but more cant be because those are unique according to schema
-
-
-
 
                         Url.create(req.body)
                             .then(data => res.json(data))
