@@ -79,9 +79,15 @@ router.post('/newUrlLong', (req, res, next) => {
 
             if(count > 0){
                 // match
-                res.json({
-                    error: "This url already exists."
-                });
+                // res.json({
+                //    error: "This url already exists."
+                //});
+
+                // return the exisiting one
+                Url.findOne({"urlLong": req.body.urlLong})
+                    .then(data => res.json(data))
+                    .catch(next);
+
             } else {
                 // zero or more entries for that
                 // but more cant be because those are unique according to schema
