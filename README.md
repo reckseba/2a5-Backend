@@ -1,7 +1,13 @@
 # 2a5
-url shortner
+url shortner  
 
 ## Setup local
+
+git clone ...  
+git pull  
+  
+npm install  
+npm update  
 
 create process.env file in main directory and put:
 
