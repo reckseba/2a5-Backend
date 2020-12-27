@@ -9,6 +9,7 @@ DB=mongodb+srv://....
 PROTOCOL=https  
 HOSTNAME=localhost  
 PORTBACKEND=5000  
+PORTFRONTEND=3000  
 
 ## SSL
 

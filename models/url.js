@@ -22,7 +22,7 @@ function makeUrlShort(lengthMin, lengthMax, callbackFunction) {
 
 function makeQrCode(urlShort, callbackFunction) {
 
-  qrcode.toDataURL(process.env.PROTOCOL + '://' + process.env.HOSTNAME + '/' + urlShort, function (err, urlQrCode) {
+  qrcode.toDataURL(process.env.PROTOCOL + '://' + process.env.HOSTNAME + ((process.env.ENVIRONMENT == 'test') ? (':' + process.env.PORTFRONTEND) : '') + '/' + urlShort, function (err, urlQrCode) {
     callbackFunction(urlQrCode);
   });
   
@@ -63,7 +63,7 @@ UrlSchema.pre('save', function(next) {
   makeUrlShort(3, 5, function(urlShort) {
     // Assigning the id property and calling next() to continue
     self.urlShort = urlShort;
-    self.urlShortFull = process.env.PROTOCOL + '://' + process.env.HOSTNAME + '/' + urlShort;
+    self.urlShortFull = process.env.PROTOCOL + '://' + process.env.HOSTNAME + ((process.env.ENVIRONMENT == 'test') ? (':' + process.env.PORTFRONTEND) : '') + '/' + urlShort;
 
     makeQrCode(self.urlShort, function (urlQrCode) {
       self.urlQrCode = urlQrCode;
